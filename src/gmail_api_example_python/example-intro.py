@@ -1,6 +1,3 @@
-# import base64
-# import io
-# import mimetypes
 from pathlib import Path
 
 from google.auth.transport.requests import Request
