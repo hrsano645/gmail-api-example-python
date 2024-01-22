@@ -16,6 +16,7 @@ token_save_path = Path("google_api_access_token.json")
 cred_json = Path("credentials.json")
 
 
+# クレデンシャルの取得用の関数
 def get_cledential(scopes: list[str]) -> Credentials:
     """
     Google APIの認証情報をOAuth2の認証フロー（クライアントシークレット）で取得します。
