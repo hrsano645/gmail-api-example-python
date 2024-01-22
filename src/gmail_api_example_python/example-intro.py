@@ -43,9 +43,6 @@ def get_cledential(scopes: list[str]) -> Credentials:
 
 
 def main():
-    """Shows basic usage of the Gmail API.
-    Lists the user's Gmail labels.
-    """
     creds = get_cledential(SCOPES)
     try:
         service = build("gmail", "v1", credentials=creds)
