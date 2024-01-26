@@ -61,18 +61,6 @@ def find_message_parts(message, message_parts=None):
     return message_parts
 
 
-# ヘッダも名前を元に探索的に探す
-def get_header_by_name(payload, name):
-    """
-    メッセージのヘッダを再帰的に探索し、nameに一致するヘッダを返す関数
-    """
-    headers = payload.get("headers", [])
-    for header in headers:
-        if header["name"] == name:
-            return header["value"]
-    return None
-
-
 def main():
     creds = get_cledential(SCOPES)
     try:
@@ -100,10 +88,6 @@ def main():
 
                 # messageのpaylodからmimetypeを元に、本文を取得
                 msg_payload = message["payload"]
-
-                # ヘッダーからタイトルを取得
-                subject = get_header_by_name(msg_payload, "Subject")
-                print(f"subject:{subject}")
 
                 # 探索的にtext/planeを探して表示する。text/htmlのみのメールもあるので注意
                 message_parts = find_message_parts(msg_payload)
