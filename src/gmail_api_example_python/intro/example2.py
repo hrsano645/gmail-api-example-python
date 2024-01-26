@@ -40,25 +40,25 @@ def get_cledential(scopes: list[str]) -> Credentials:
     return creds
 
 
-def get_plain_text_body(payload):
+def find_message_parts(message, message_parts=None):
     """
-    text/plain MIMEタイプのメール本文を取得する関数
-    mimetypeが入れ子構造になっているため、探索的にtext/planeを探す
+    メッセージから text/plain と text/html の部分を再帰的に探索する関数
     """
-    mimetype = payload.get("mimeType")
-    if mimetype == "text/plain":
-        body = payload.get("body", {})
-        data = body.get("data")
-        if data:
-            text = base64.urlsafe_b64decode(data).decode("utf-8")
-            return text
+    if message_parts is None:
+        message_parts = {"text/plain": None, "text/html": None}
 
-    parts = payload.get("parts", [])
-    for part in parts:
-        text = get_plain_text_body(part)
-        if text:
-            return text
-    return None
+    mimetype = message.get("mimeType")
+    data = message.get("body", {}).get("data")
+
+    if mimetype == "text/plain" and data:
+        message_parts["text/plain"] = base64.urlsafe_b64decode(data).decode("utf-8")
+    elif mimetype == "text/html" and data:
+        message_parts["text/html"] = base64.urlsafe_b64decode(data).decode("utf-8")
+
+    for part in message.get("parts", []):
+        find_message_parts(part, message_parts)
+
+    return message_parts
 
 
 # ヘッダも名前を元に探索的に探す
@@ -105,10 +105,12 @@ def main():
                 subject = get_header_by_name(msg_payload, "Subject")
                 print(f"subject:{subject}")
 
-                # 探索的にtext/planeを探して表示する
-                plain_text_body = get_plain_text_body(msg_payload)
-                if plain_text_body:
-                    print(f"{plain_text_body[0:20]}\n")
+                # 探索的にtext/planeを探して表示する。text/htmlのみのメールもあるので注意
+                message_parts = find_message_parts(msg_payload)
+                message_text = message_parts["text/plain"] or message_parts["text/html"]
+                if message_text:
+                    # 20文字まで出している
+                    print(f"{message_text[0:20]}\n")
 
     # エラーハンドリング
     except HttpError as error:
