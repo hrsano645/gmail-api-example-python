@@ -1,5 +1,4 @@
 import base64
-import email
 from pathlib import Path
 
 from google.auth.transport.requests import Request
