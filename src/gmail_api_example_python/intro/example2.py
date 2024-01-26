@@ -88,7 +88,7 @@ def main():
             print("No messages in inbox.")
         else:
             print("Inbox Messages:")
-            # メールが多い場合を想定して最大2件を表示
+            # メールが多い場合を想定して最大3件まで表示
             for message_info in inbox_messges[0:3]:
                 print(f"gmail message id:{message_info['id']}")
                 # メール本文を取得
