@@ -102,16 +102,14 @@ def main():
                 # messageのpaylodからmimetypeを元に、本文を取得
                 msg_payload = message["payload"]
 
-                # 上のコードを関数で置き換えたもの
+                # ヘッダーからタイトルを取得
                 subject = get_header_by_name(msg_payload, "Subject")
                 print(f"subject:{subject}")
 
-                # 探索的にtext/planeを探す
+                # 探索的にtext/planeを探して表示する
                 plain_text_body = get_plain_text_body(msg_payload)
                 if plain_text_body:
-                    print(
-                        f"Message ID: {message_info['id']}\n{plain_text_body[0:10]}\n"
-                    )
+                    print(f"{plain_text_body[0:20]}\n")
 
     # エラーハンドリング
     except HttpError as error:
