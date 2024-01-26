@@ -41,18 +41,6 @@ def get_cledential(scopes: list[str]) -> Credentials:
     return creds
 
 
-def list_mimetypes(message, indent=0):
-    """
-    メッセージのMIMEタイプを再帰的にリストアップし、文字列として返す関数
-    """
-    mimetype = message.get("mimeType")
-    mime_str = " " * indent + mimetype + "\n"
-    parts = message.get("parts", [])
-    for part in parts:
-        mime_str += list_mimetypes(part, indent + 2)
-    return mime_str
-
-
 def get_plain_text_body(payload):
     """
     text/plain MIMEタイプのメール本文を取得する関数
