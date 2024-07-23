@@ -47,6 +47,7 @@ def main():
 
             message.set_content(reply_body)
         # payloadにpartがある場合は返信元のメッセージを引用しないようにしています
+        # htmlメールの場合はtext/planeのメール本文もあるのですが探すコードをここに書くと長くなるので割愛してます。
         else:
             message.set_content(MSG_BODY)
 
