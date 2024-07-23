@@ -35,18 +35,6 @@ def main():
 
         message = EmailMessage()
 
-        # References,In-Reply-Toを設定する
-        # 返信先のメッセージのMessage-IDを取得して、それを設定する
-        message_id = next(
-            (
-                i.get("value", "")
-                for i in quote_message["payload"]["headers"]
-                if i.get("name").lower() == "message-id"
-            )
-        )
-        message["reply-to"] = message_id
-        message["references"] = message_id
-
         # 引用する形で返信する
         # メッセージの種類によっては引用しづらい時がある。引用元のメッセージはtext/planeを使うと良い
         # partsがない場合 = シンプルなテキストベースの場合
@@ -86,6 +74,18 @@ def main():
             )
         )
         message["subject"] = f"Re: {quoted_subject}"
+
+        # References,In-Reply-Toを設定する
+        # 返信先のメッセージのMessage-IDを取得して、それを設定する
+        message_id = next(
+            (
+                i.get("value", "")
+                for i in quote_message["payload"]["headers"]
+                if i.get("name").lower() == "message-id"
+            )
+        )
+        message["reply-to"] = message_id
+        message["references"] = message_id
 
         # 添付ファイルがある場合は追加
         # TODO: ここでは一つのファイルしか扱っていない。複数の場合はループ処理で登録する
